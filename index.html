@@ -1,0 +1,599 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Safsata Türünü Bul</title>
+
+  <!-- Chrome sekme ikonu -->
+  <link rel="icon" type="image/x-icon" href="./gantep.ico?v=2">
+
+  <style>
+    :root {
+      --mor: #69346f;
+      --yesil: #17803b;
+      --kirmizi: #cf3030;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f7f5f8;
+      color: #222;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    main {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 24px 18px 50px;
+    }
+
+    .status {
+      background: white;
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-weight: 700;
+      box-shadow: 0 3px 12px #0000000b;
+    }
+
+    .bar {
+      height: 9px;
+      background: #e8dfeb;
+      border-radius: 100px;
+      overflow: hidden;
+      margin: 12px 0 22px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0;
+      background: var(--mor);
+      transition: width .25s ease;
+    }
+
+    .case {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 3px 12px #0000000b;
+    }
+
+    .case p {
+      font-size: clamp(17px, 2vw, 20px);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    /* Görsel butonlar */
+
+    .options {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      border: 3px solid #ded5e1;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      min-width: 0;
+      box-shadow: 0 3px 10px #0000000b;
+      transition:
+        border-color .2s,
+        background-color .2s,
+        transform .15s;
+    }
+
+    .option:not(:disabled):not(.wrong):hover {
+      border-color: var(--mor);
+      transform: translateY(-2px);
+    }
+
+    .option:focus-visible,
+    .next:focus-visible {
+      outline: 3px solid #4b9aff;
+      outline-offset: 3px;
+    }
+
+    .option img {
+      display: block;
+      width: 100%;
+      height: 145px;
+      object-fit: contain;
+    }
+
+    /* Yanlış seçim */
+
+    .option.wrong {
+      background: #ffdddd;
+      border-color: var(--kirmizi);
+      box-shadow: 0 0 0 2px #f5b5b5;
+    }
+
+    /* Doğru seçim */
+
+    .option.correct {
+      background: #e7f8eb;
+      border-color: var(--yesil);
+      box-shadow: 0 0 0 2px #b8eac7;
+    }
+
+    .option:disabled {
+      cursor: default;
+      opacity: 1;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    .next {
+      background: var(--mor);
+      color: white;
+      padding: 14px 25px;
+      border: 0;
+      border-radius: 11px;
+      font-weight: 700;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    .next:disabled {
+      background: #aaa4ae;
+      cursor: not-allowed;
+    }
+
+    /* Sonuç ekranı */
+
+    .finish {
+      display: none;
+      background: white;
+      border-radius: 16px;
+      text-align: center;
+      padding: 35px 20px;
+      margin-top: 22px;
+      box-shadow: 0 3px 12px #0000000b;
+    }
+
+    .finish h2 {
+      color: var(--mor);
+      font-size: 28px;
+    }
+
+    .finish p {
+      font-size: 21px;
+      line-height: 1.6;
+    }
+
+    .perfect-message {
+      color: var(--yesil);
+      font-weight: bold;
+      font-size: 24px !important;
+    }
+
+    /* Tablet: 3 + 3 */
+
+    @media (max-width: 850px) {
+      .options {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .option img {
+        height: 145px;
+      }
+    }
+
+    /* Telefon: 3 + 3 */
+
+    @media (max-width: 550px) {
+      main {
+        padding: 16px 12px 36px;
+      }
+
+      .case {
+        padding: 18px;
+      }
+
+      .status {
+        padding: 13px 14px;
+        font-size: 14px;
+      }
+
+      .options {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .option {
+        padding: 3px;
+        border-width: 2px;
+        border-radius: 9px;
+      }
+
+      .option img {
+        width: 100%;
+        height: 115px;
+        object-fit: contain;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<main>
+
+  <!-- Durum ve puan -->
+
+  <section class="status">
+    <span id="counter">Durum 1 / 14</span>
+    <span id="score">İlk denemede doğru: 0</span>
+  </section>
+
+  <div class="bar">
+    <div class="bar-fill" id="barFill"></div>
+  </div>
+
+  <!-- Oyun -->
+
+  <section id="game">
+
+    <article class="case">
+      <p id="caseText"></p>
+    </article>
+
+    <div id="options" class="options"></div>
+
+    <div class="actions">
+      <button id="next" class="next" disabled>
+        Sonraki
+      </button>
+    </div>
+
+  </section>
+
+  <!-- Sonuç -->
+
+  <section id="finish" class="finish">
+
+        <p id="result"></p>
+
+    <button id="restart" class="next">
+      Yeniden Başla
+    </button>
+
+  </section>
+
+</main>
+
+<script>
+
+  // ALTI GÖRSEL
+
+  const types = [
+    {
+      key: "adam-karalama",
+      name: "Ad Hominem",
+      image: "adam-karalama.png"
+    },
+    {
+      key: "aceleci-genelleme",
+      name: "Aceleci Genelleme",
+      image: "aceleci-genelleme.png"
+    },
+    {
+      key: "cimbizlama",
+      name: "Cımbızlama",
+      image: "cimbizlama.png"
+    },
+    {
+      key: "korkuluk",
+      name: "Korkuluk",
+      image: "korkuluk.png"
+    },
+    {
+      key: "yanlis-ikilem",
+      name: "Yanlış İkilem",
+      image: "yanlis-ikilem.png"
+    },
+    {
+      key: "safsata-yok",
+      name: "Safsata Yok",
+      image: "safsata-yok.png"
+    }
+  ];
+
+  // 14 YENİ DURUM
+
+  const situations = [
+
+    {
+      text: "Bir üniversitenin faaliyet raporunda, kütüphaneden ödünç alınan kitap sayısının önceki yıla göre %28 arttığı belirtiliyor. Yönetim, bu artışı kütüphanenin giderek daha fazla öğrenciye ulaştığının bir göstergesi olarak nitelendiriyor. Raporun ek tabloları incelendiğinde kütüphaneden yararlanan öğrenci sayısında %10’a yakın bir azalma olduğu ve ödünç alma işlemlerinin daha küçük bir öğrenci grubunda yoğunlaştığı görülüyor.",
+      answer: "cimbizlama"
+    },
+
+    {
+      text: "Bir mimarlık firmasının hazırladığı meydan düzenleme projesi kamuoyunda tartışılıyor. Yerel gazeteden bir köşe yazarı, firmanın yöneticisinin geçmişte hakkında usulsüzlük iddiaları bulunan bir şirketin eski yöneticisiyle aynı dernekte görev yaptığını yazıyor. Yazar, bu bağlantının projenin hangi amaçlara hizmet ettiğini anlamak için yeterli olduğunu ve rapordaki teknik gerekçeleri incelemenin bütünüyle gereksiz olduğunu savunuyor.",
+      answer: "adam-karalama"
+    },
+
+    {
+      text: "Bir grup akademisyen, üniversitelerde zorunlu devam uygulamasının sağlık sorunları, çalışma zorunluluğu ve bireysel öğrenme farklılıkları dikkate alınarak yeniden düzenlenmesini öneriyor. Üniversite senatosunda bu konu görüşülürken bir üye söz alıyor ve öğrencilerin yalnızca sınavlara girip diploma almasını esas alan bir üniversite anlayışının akademik disiplini ortadan kaldıracağını savunarak öneriye karşı çıkıyor.",
+      answer: "korkuluk"
+    },
+
+    {
+      text: "Bir öğretim üyesi, derslerde telefon kullanımının sınırlandırılması gerektiğini, ancak bazı eğitim etkinliklerinde telefonlardan yararlanılabileceğini savunuyor. Bölüm yönetiminden bir başka akademisyen ise telefon kullanımına getirilen kısmi sınırlamaların dikkat sorununu çözmeyeceğini belirtiyor. Ona göre üniversitenin, telefonları dersliklerden tamamen uzaklaştırarak akademik disiplini koruması gerekiyor. Aksi takdirde öğrencilerin dikkatinin dağılmasının kaçınılmaz olduğunu savunuyor.",
+      answer: "yanlis-ikilem"
+    },
+
+    {
+      text: "Bir ekonomi yorumcusu, son aylarda iki büyük restoran zincirinin müşteri şikâyetlerinde belirgin bir artış yaşandığına dikkat çekiyor. Bu işletmelerdeki hizmet sorunlarını değerlendirdikten sonra ülkedeki restoran sektörünün genel olarak müşteri memnuniyetini önemsememeye başladığından söz ediyor. Ayrıca bu durumun sektörde çalışanların mesleki sorumluluk anlayışındaki gerilemeyi gösterdiğini ileri sürüyor.",
+      answer: "aceleci-genelleme"
+    },
+
+    {
+      text: "Bir akademisyen, dersinde öğrencilerin araştırmalarında kullandıkları kaynakların doğruluğunu mutlaka kontrol etmeleri gerektiğini söylüyor. Öğrencilerden biri, akademisyenin birkaç yıl önce yayımladığı bir makalede birçok kaynak hatası yaptığını dile getiriyor. Akademisyenin kendi çalışmalarında bile bu kurala uymadığına dikkat çeken öğrenci, bu önerilerin ciddiye alınamayacağını ileri sürüyor.",
+      answer: "adam-karalama"
+    },
+
+    {
+      text: "Belediyenin düzenlediği ulaşım ve trafik toplantısında şehir plancısı, şehir merkezindeki bir caddenin hafta sonları belirli saatlerde araç trafiğine kapatılmasını öneriyor. Esnaf temsilcisi, önerinin yayalar açısından bazı yararlar sağlayabileceğini kabul ediyor. Ancak aynı saatlerde bölgedeki işletmelere mal teslimatı yapıldığını ve araç girişinin sınırlandırılmasının bu işletmelerin faaliyetlerini zorlaştırabileceğini belirtiyor. Bu nedenle önerilen saatlerin yeniden değerlendirilmesini ve teslimat araçları için belirli düzenlemeler yapılmasını istiyor.",
+      answer: "safsata-yok"
+    },
+
+    {
+      text: "Bir belediye, yeni ulaşım hattının başarısını değerlendirmek amacıyla yolcu memnuniyeti araştırması yapıyor. Sabah saatlerinde hattı kullanan yolcuların büyük çoğunluğu hizmetten memnun olduğunu belirtiyor. Ancak akşam saatlerinde sefer yetersizliği ve uzun bekleme süreleri nedeniyle ciddi şikâyetler ortaya çıkıyor. Belediyenin konuya ilişkin yayımladığı videoda ise, vatandaşlarla yapılan röportajların genellikle sabah saatlerindeki seferlere ilişkin olduğu görülüyor.",
+      answer: "cimbizlama"
+    },
+
+    {
+      text: "Mahallede yeni bir park yapılması gerektiğini savunan esnaf, bölgede çocukların güvenle oynayabileceği alanların yetersizliğine dikkat çekiyor. Ancak esnafın dükkânının parkın yapılması planlanan alana yakın olduğunu öğrenen bir mahalle sakini, bu önerinin yalnızca ticari kazanç beklentisinden kaynaklandığını savunarak bu fikre karşı çıkıyor.",
+      answer: "adam-karalama"
+    },
+
+    {
+      text: "Bir rehabilitasyon merkezinde taburculuk sonrası hasta takibinin nasıl yürütüleceği tartışılıyor. Birim sorumlusu, mevcut personelle bütün hastalara haftalık yüz yüze seans sağlamanın mümkün olmadığını belirtiyor. Kişiye özgü rehabilitasyondan söz edebilmek için her hastanın düzenli olarak bire bir izlenmesi gerektiğini, bunun sağlanamadığı koşullarda ise bütün hastalara aynı ev egzersiz programının verilmesinin daha tutarlı olacağını savunuyor.",
+      answer: "yanlis-ikilem"
+    },
+
+    {
+      text: "Bir hastanenin fizyoterapi biriminde, nörolojik rehabilitasyon uygulamalarının yeniden düzenlenmesi tartışılıyor. Bir grup fizyoterapist, belirli hastalarda egzersiz yoğunluğunun yalnızca standart protokollere göre değil, hastanın yorgunluğu, klinik durumu ve günlük performansı dikkate alınarak ayarlanmasını öneriyor. Başka bir uzman ise rehabilitasyonun nesnel ölçütlere dayanması gerektiğini vurgulayarak hastaların o günkü isteklerine göre şekillenen bir tedavi anlayışının bilimsel standartları zayıflatacağını ileri sürüyor.",
+      answer: "korkuluk"
+    },
+
+    {
+      text: "Bir fizyoterapi merkezinde, hastaların evde yapmaları gereken hareketleri daha iyi hatırlamaları için resimli bir egzersiz kitapçığı hazırlanıyor. Kitapçığı kullanan 24 hastanın 18'i hareketleri daha kolay hatırladığını, altısı ise bazı hareketleri uygularken zorlandığını belirtiyor. Sorumlu fizyoterapist, sonuçların kitapçığın hasta eğitimine katkı sağlayabilecek önemli bir çalışma olduğunu ileri sürüyor. Bununla birlikte kitapçığın daha geniş bir hasta grubunda denenmesini ve anlaşılmayan bölümlerin yeniden düzenlenmesini istiyor.",
+      answer: "safsata-yok"
+    },
+
+    {
+      text: "Bir rehabilitasyon merkezi, kronik diz ağrısı yaşayan hastalar için geliştirdiği egzersiz programının sonuçlarını bir kongrede sunuyor. Sunumda, programa katılan hastaların altıncı haftadaki ağrı puanlarının başlangıca göre belirgin biçimde azaldığı vurgulanıyor. Araştırmanın ayrıntılı sonuçlarında ise on ikinci haftada karşılaştırma grubuyla anlamlı bir fark bulunmadığı ve günlük yaşam aktivitelerine ilişkin ölçümlerde iki grup arasında belirgin bir üstünlük görülmediği belirtiliyor. Merkez, sunumun sonuç bölümünde programın rehabilitasyon başarısını artırdığını savunuyor.",
+      answer: "cimbizlama"
+    },
+
+    {
+      text: "Bir üniversitenin fizyoterapi bölümünde kronik bel ağrısına yönelik takip programları tartışılıyor. Bir öğretim üyesi, hastaların belirli aralıklarla yeniden değerlendirilmesini ve egzersiz programlarının bu değerlendirmelere göre güncellenmesini öneriyor. Toplantıya katılan başka bir akademisyen, öneriyi sunan kişinin aynı zamanda özel bir rehabilitasyon merkezinde ücretli takip hizmetleri verdiğini öne sürüyor. Bu durumun önerinin arkasındaki asıl amacı ortaya koyduğunu belirterek sunulan bilimsel gerekçelerden önce öneriyi geliştiren kişinin konumunun dikkate alınması gerektiğine dikkat çekiyor.",
+      answer: "adam-karalama"
+    }
+
+  ];
+
+  // OYUN DEĞİŞKENLERİ
+
+  let index = 0;
+  let firstTryCorrect = 0;
+  let attemptedWrong = false;
+  let solved = false;
+
+  const counter = document.getElementById("counter");
+  const score = document.getElementById("score");
+  const barFill = document.getElementById("barFill");
+  const caseText = document.getElementById("caseText");
+  const options = document.getElementById("options");
+  const next = document.getElementById("next");
+
+  // DURUMU GÖSTER
+
+  function showSituation() {
+
+    solved = false;
+    attemptedWrong = false;
+    next.disabled = true;
+
+    next.textContent =
+      index === situations.length - 1
+        ? "Sonucu Gör →"
+        : "Sonraki";
+
+    counter.textContent =
+      `Durum ${index + 1} / ${situations.length}`;
+
+    score.textContent =
+      `İlk denemede doğru: ${firstTryCorrect}`;
+
+    barFill.style.width =
+      `${index / situations.length * 100}%`;
+
+    caseText.textContent = situations[index].text;
+
+    options.replaceChildren();
+
+    types.forEach(type => {
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "option";
+      button.setAttribute("aria-label", type.name);
+
+      const img = document.createElement("img");
+      img.src = type.image;
+      img.alt = type.name;
+
+      button.append(img);
+
+      button.addEventListener("click", () => {
+        choose(type.key, button);
+      });
+
+      options.append(button);
+
+    });
+  }
+
+  // CEVAP KONTROLÜ
+
+  function choose(key, button) {
+
+    if (solved) return;
+
+    const correctAnswer = situations[index].answer;
+
+    // Yanlış: Kırmızı yanıp söner
+
+    if (key !== correctAnswer) {
+
+      attemptedWrong = true;
+
+      button.classList.add("wrong");
+
+      clearTimeout(button.flashTimer);
+
+      button.flashTimer = setTimeout(() => {
+        button.classList.remove("wrong");
+      }, 750);
+
+      next.disabled = true;
+
+      return;
+    }
+
+    // Doğru: Yeşil kalır
+
+    solved = true;
+
+    if (!attemptedWrong) {
+      firstTryCorrect++;
+    }
+
+    button.classList.remove("wrong");
+    button.classList.add("correct");
+
+    score.textContent =
+      `İlk denemede doğru: ${firstTryCorrect}`;
+
+    [...options.children].forEach(option => {
+      option.disabled = true;
+    });
+
+    next.disabled = false;
+  }
+
+  // SONRAKİ DURUM
+
+  next.addEventListener("click", () => {
+
+    if (!solved) return;
+
+    index++;
+
+    if (index < situations.length) {
+
+      showSituation();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+    } else {
+
+      showResult();
+
+    }
+  });
+
+  // SONUÇ EKRANI
+
+  function showResult() {
+
+    document.getElementById("game").style.display = "none";
+
+    document.getElementById("finish").style.display = "block";
+
+    counter.textContent =
+      `Durum ${situations.length} / ${situations.length}`;
+
+    barFill.style.width = "100%";
+
+    const result = document.getElementById("result");
+
+    if (firstTryCorrect === situations.length) {
+
+      result.textContent =
+        "Tebrikler! Tüm durumları ilk denemede doğru yanıtladınız!";
+
+      result.className = "perfect-message";
+
+    } else {
+
+      result.textContent =
+        `${situations.length} durumu tamamladınız. İlk denemede ${firstTryCorrect} doğru yanıt verdiniz.`;
+
+      result.className = "";
+
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+  // YENİDEN BAŞLA
+
+  document.getElementById("restart")
+    .addEventListener("click", () => {
+
+      index = 0;
+      firstTryCorrect = 0;
+      attemptedWrong = false;
+      solved = false;
+
+      document.getElementById("game").style.display = "block";
+      document.getElementById("finish").style.display = "none";
+
+      showSituation();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+    });
+
+  showSituation();
+
+</script>
+
+</body>
+</html>
