@@ -246,7 +246,7 @@
   <!-- DURUM VE PUAN -->
 
   <section class="status">
-    <span id="counter">Durum 1 / 14</span>
+    <span id="counter">Durum 1 / 13</span>
     <span id="score">İlk denemede doğru: 0</span>
   </section>
 
@@ -274,16 +274,14 @@
 
   <!-- SONUÇ -->
 
-  <section id="finish">
-
-  </section>
-
   <section id="finishScreen" class="finish">
+
     <p id="result"></p>
 
     <button id="restart" class="next">
       Yeniden Başla
     </button>
+
   </section>
 
 </main>
@@ -330,74 +328,95 @@
     }
   ];
 
-  // 14 YENİ DURUM
+  // 13 GÜNCEL DURUM
 
   const situations = [
+
+    // DURUM 1 - BİR BİLEN
+
+    {
+      text: "Bir üniversitede öğrencilerin ders başarılarını artırmak amacıyla yeni bir ölçme ve değerlendirme sistemi öneriliyor. Sistemin tanıtıldığı toplantıda bir kurul üyesi, uluslararası alanda tanınan ve önemli bilimsel ödüller kazanmış bir fizikçinin de bu sistemi desteklediğini hatırlatarak bilimsel değerlendirmelerine uzun yıllardır güvenilen böyle bir araştırmacının olumlu görüşünün, uygulamanın benimsenmesi konusunda önemli bir dayanak oluşturduğunu savunuyor.",
+      answer: "bir-bilen"
+    },
+
+    // DURUM 2 - YANLIŞ NEDENSELLİK
 
     {
       text: "Bir belediye, şehir merkezindeki otobüs hatlarının sefer saatlerini yeniden düzenliyor. Uygulamadan sonraki üç ayda toplu taşıma kullanan yolcu sayısında %18 artış görülüyor. Aynı dönemde akaryakıt fiyatları yükseliyor ve şehir merkezindeki bazı yollar uzun süreli bakım çalışmaları nedeniyle özel araç trafiğine kapatılıyor. Ulaşım dairesi yöneticisi, yolcu sayısındaki artışın yeni sefer düzenine geçilmesinden hemen sonra gerçekleştiğine dikkat çekiyor. Bu gelişmeyi, yapılan düzenlemenin ulaşım alışkanlıkları üzerinde olumlu sonuçlar doğurduğunun önemli bir göstergesi olarak değerlendiriyor.",
       answer: "yanlis-nedensellik"
     },
 
-    {
-      text: "Bir üniversitede öğrencilerin ders başarılarını artırmak amacıyla yeni bir ölçme ve değerlendirme sistemi öneriliyor. Sistemin öğrenme üzerindeki etkisini gösteren araştırmaların henüz tamamlanmadığı belirtiliyor. Buna karşılık üniversite yönetiminden bir üye, uluslararası alanda tanınan ve önemli bilimsel ödüller kazanmış bir fizikçinin de bu sistemi desteklediğini hatırlatıyor. Bilimsel değerlendirmelerine uzun yıllardır güvenilen böyle bir araştırmacının olumlu görüşünün, uygulamanın benimsenmesi konusunda önemli bir dayanak oluşturduğunu savunuyor.",
-      answer: "bir-bilen"
-    },
+    // DURUM 3 - SAFSATA YOK
 
     {
       text: "Bir üniversite kütüphanesinde çalışma alanlarının yetersiz olduğu yönünde öğrenci şikâyetleri artıyor. Yönetim, farklı fakültelerden öğrencilerin katıldığı bir anket düzenliyor ve özellikle sınav dönemlerinde sessiz çalışma alanlarına yönelik talebin yükseldiğini belirliyor. Bunun üzerine az kullanılan toplantı odalarından birinin belirli saatlerde bireysel çalışma alanına dönüştürülmesi öneriliyor. Yönetim, uygulamanın bir dönem denenmesini ve kullanım verilerine göre sürdürülüp sürdürülmeyeceğine karar verilmesini istiyor.",
       answer: "safsata-yok"
     },
 
+    // DURUM 4 - KAYGAN ZEMİN
+
     {
-      text: "Bir üniversitenin akademik kurulunda, çalışan öğrencilerin derslere devamını kolaylaştırmak amacıyla bazı teorik derslerin kayıtlarının sınırlı süreyle erişime açılması öneriliyor. Kurul üyelerinden biri, başlangıçta yalnızca belirli dersler için düşünülen bu uygulamanın ilerleyen dönemlerde diğer derslere de yayılabileceğini belirtiyor. Öğrencilerin zamanla kayıtları canlı derslerin yerine koymaya başlayacağını, bunun öğretim üyelerinin derslere yaklaşımını da değiştireceğini ve yüz yüze eğitimin giderek ikinci plana düşeceğini düşünüyor. Bu nedenle önerinin uzun vadeli sonuçlarının dikkate alınmasını istiyor ve uygulamaya karşı çıkıyor.",
+      text: "Bir üniversitenin akademik kurulunda, çalışan öğrencilerin derslere devamını kolaylaştırmak amacıyla bazı teorik derslerin video kayıtlarının sınırlı süreyle erişime açılması öneriliyor. Kurul üyelerinden biri, başlangıçta yalnızca belirli dersler için düşünülen bu uygulamanın ilerleyen dönemlerde diğer derslere de yayılabileceğine dikkat çekiyor. Öğrencilerin zamanla kayıtları canlı derslerin yerine koymaya başlayacağını, bunun öğretim üyelerinin derslere yaklaşımını da değiştireceğini ve yüz yüze eğitimin giderek ikinci plana düşeceğini ifade ediyor. Bu nedenle önerinin uzun vadeli sonuçlarının dikkate alınmasını istiyor ve uygulamaya karşı çıkıyor.",
       answer: "kaygan-zemin"
     },
 
+    // DURUM 5 - DUYGULARA BAŞVURMA
+
     {
-      text: "Bir belediye, yeni yapılacak spor merkezinin hangi mahallede kurulacağını belirlemek amacıyla nüfus yoğunluğu, ulaşım olanakları ve mevcut tesislerin kullanım oranlarını inceliyor. Toplantıda söz alan bir mahalle temsilcisi, çocukluğunda spor yapacak bir yer bulamadığı için yaşadığı güçlükleri anlatıyor. Ardından mahallesindeki çocukların da benzer koşullarda büyüdüğünü belirterek katılımcılardan kendi çocuklarını bu durumda hayal etmelerini istiyor. Spor merkezinin yerini belirlerken bu çocukların yaşadıklarının göz önünde bulundurulması gerektiğini vurgulayarak merkezin kendi mahallesinde kurulmasını savunuyor.",
+      text: "Bir belediye, yeni yapılacak spor merkezinin hangi mahallede kurulacağını belirlemek amacıyla nüfus yoğunluğu, ulaşım olanakları ve mevcut tesislerin kullanım oranlarını inceliyor. Toplantıda söz alan bir mahalle muhtarı, çocukluğunda spor yapacak bir yer bulamadığı için yaşadığı güçlükleri anlatıyor. Ardından mahallesindeki çocukların da benzer koşullarda büyüdüğünü belirterek merkezin kendi mahallelerinde kurulmasını talep ediyor.",
       answer: "duygulara-basvurma"
     },
 
-    {
-      text: "Bir eğitim teknolojileri şirketi, üniversitelerde kullanılmak üzere geliştirdiği dijital öğrenme platformunu tanıtıyor. Şirket temsilcisi, ülkedeki üniversitelerin büyük bölümünün benzer platformları kullanmaya başladığını ve öğrencilerin de bu tür uygulamaları giderek daha fazla tercih ettiğini belirtiyor. Toplantıda bazı akademisyenler, platformun öğrenme üzerindeki etkisinin pilot uygulamalarla değerlendirilmesini öneriyor. Şirket temsilcisi ise yükseköğretimde bu kadar yaygın benimsenen bir yöntemin başarılı sonuçlar verdiğinin anlaşılabileceğini, üniversitenin de bu gelişmenin dışında kalmaması gerektiğini savunuyor.",
-      answer: "cogunluga-basvurma"
-    },
+    // DURUM 6 - İSPAT YÜKÜMLÜLÜĞÜ
 
     {
-      text: "Bir teknoloji firması, geliştirdiği yeni aydınlatma sisteminin çalışanların dikkatini ve zihinsel performansını belirgin biçimde artırdığını ileri sürüyor. Bir kurumun satın alma komisyonu, bu iddiayı destekleyen bağımsız araştırmaları görmek istiyor. Firma temsilcisi, sistemin performans üzerinde olumsuz bir etkisi olduğunu gösteren herhangi bir araştırmaya rastlanmadığını belirtiyor. Komisyonun bu konuda farklı bir değerlendirmesi varsa ilgili araştırmaları sunabileceğini, mevcut bilgiler ışığında sistemin satın alınmasının uygun bir tercih olacağını ifade ediyor.",
+      text: "Bir teknoloji firması, geliştirdiği yeni aydınlatma sisteminin çalışanların dikkatini ve zihinsel performansını belirgin biçimde artırdığını ileri sürüyor. Bu sistemi satın almayı planlayan kurumun satın alma komisyonu, bu iddiayı destekleyen bağımsız araştırmaları görmek istiyor. Bunun üzerine firma temsilcisi, sistemin performans üzerinde olumsuz bir etkisi olduğunu gösteren herhangi bir araştırmaya bugüne dek rastlanılmadığına dikkat çekiyor. Komisyonun bu konuda farklı bir değerlendirmesi varsa ilgili verileri sunabileceği, mevcut bilgiler ışığında sistemin satın alınmasında herhangi bir sakınca olmadığı bildiriliyor.",
       answer: "ispat-yukumlulugu"
     },
 
+    // DURUM 7 - SAFSATA YOK
+
     {
-      text: "Bir rehabilitasyon merkezinde, hastaların ev egzersizlerini düzenli yapmalarını kolaylaştırmak amacıyla telefon üzerinden hatırlatma mesajları gönderilmeye başlanıyor. İlk dört haftanın sonunda bazı hastaların egzersizlere daha düzenli katıldığı, bazılarında ise belirgin bir değişiklik olmadığı görülüyor. Sorumlu fizyoterapist, bulguların uygulamanın yararlı olabileceğine işaret ettiğini, ancak iyileşmenin yalnızca hatırlatma mesajlarından kaynaklandığının henüz söylenemeyeceğini belirtiyor. Uygulamanın daha geniş bir grupta karşılaştırmalı olarak değerlendirilmesini öneriyor.",
+      text: "Bir rehabilitasyon merkezinde, hastaların ev egzersizlerini düzenli yapmalarını kolaylaştırmak amacıyla telefon üzerinden hatırlatma mesajları gönderilmeye başlanıyor. İlk dört haftanın sonunda bazı hastaların egzersizlere daha düzenli katıldığı, bazılarında ise belirgin bir değişiklik olmadığı görülüyor. Sorumlu fizyoterapist, bulguların uygulamanın yararlı olabileceğine işaret ederek uygulamanın daha geniş bir grupta karşılaştırmalı olarak değerlendirilmesini öneriyor.",
       answer: "safsata-yok"
     },
 
+    // DURUM 8 - ÇOĞUNLUĞA BAŞVURMA
+
     {
-      text: "Bir rehabilitasyon merkezinde kronik bel ağrısı olan hastalar için kullanılacak egzersiz yöntemleri tartışılıyor. Merkez yöneticisi, belirli bir egzersiz programının ülkedeki çok sayıda rehabilitasyon merkezinde uygulandığını ve fizyoterapistlerin büyük bölümünün bu yöntemi tercih ettiğini belirtiyor. Toplantıda bazı uzmanlar, farklı yöntemlerin etkinliğine ilişkin araştırmaların karşılaştırılmasını öneriyor. Yönetici ise klinik uygulamada bu ölçüde benimsenmiş bir programın diğer seçeneklere göre daha başarılı sonuçlar verdiğinin düşünülebileceğini ve merkezin bu yöntemi tercih etmesinin yerinde olacağını savunuyor.",
+      text: "Bir rehabilitasyon merkezinde kronik bel ağrısı olan hastalar için kullanılacak egzersiz yöntemleri tartışılıyor. Merkez yöneticisi, belirli bir egzersiz programının ülkedeki çok sayıda rehabilitasyon merkezinde uygulandığını ve fizyoterapistlerin büyük bölümünün bu yöntemi tercih ettiğini belirtiyor. Toplantıda bazı uzmanlar, farklı yöntemlerin etkinliğine ilişkin araştırmaların karşılaştırılmasını öneriyor. Yönetici ise bu çapta benimsenmiş bir programın diğer seçeneklere göre daha başarılı sonuçlar vereceğini ve merkezin bu yöntemi tercih etmesinin yerinde olacağını savunuyor.",
       answer: "cogunluga-basvurma"
     },
+
+    // DURUM 9 - KAYGAN ZEMİN
 
     {
       text: "Bir hastanenin fizyoterapi biriminde, hastaların ev egzersiz programlarını belirlerken kişisel tercihlerini de dikkate almak amacıyla bazı hareketler arasında seçim yapmalarına izin verilmesi öneriliyor. Birim sorumlusu, başlangıçta belirli hareketlerle sınırlı tutulan bu seçimin zamanla hastaların tedavi programının diğer bölümleri üzerinde de söz sahibi olmak istemelerine yol açabileceğini belirtiyor. Böyle bir gelişmenin klinik kararların uygulanmasını güçleştireceğini ve standart rehabilitasyon yaklaşımlarının zaman içinde önemini kaybedebileceğini düşünüyor. Bu gerekçelerle önerinin kabul edilmesini uygun bulmuyor.",
       answer: "kaygan-zemin"
     },
 
+    // DURUM 10 - YANLIŞ NEDENSELLİK
+
     {
-      text: "Bir hastanede, düşme riskini azaltmak amacıyla rehabilitasyon salonlarının zemin kaplamaları değiştiriliyor. Yeni kaplamaların kullanılmaya başlanmasından sonraki altı ayda hasta düşmelerinde belirgin bir azalma kaydediliyor. Ancak aynı dönemde hastaların gözetiminden sorumlu personel sayısı artırılıyor ve düşme riski yüksek hastalar için yeni takip prosedürleri uygulanıyor. Hastane yöneticisi, düşmelerdeki azalmanın zemin değişikliğinin ardından ortaya çıktığını vurgulayarak bu sonucu yapılan yatırımın beklenen yararları sağladığının bir göstergesi olarak değerlendiriyor.",
+      text: "Bir hastanede, düşme riskini azaltmak amacıyla rehabilitasyon salonlarının zemin kaplamaları değiştiriliyor. Yeni kaplamaların kullanılmaya başlanmasından sonraki altı ayda hasta düşmelerinde belirgin bir azalma kaydediliyor. Ancak aynı dönemde hastaların gözetiminden sorumlu personel sayısı artırılıyor ve düşme riski yüksek hastalar için yeni takip prosedürleri uygulanıyor. Hastane yöneticisi, düşmelerdeki azalmanın zemin değişikliğinin ardından ortaya çıktığını vurgulayarak bu sonucu, yapılan yatırımın beklenen yararları sağladığının bir göstergesi olarak değerlendiriyor.",
       answer: "yanlis-nedensellik"
     },
 
+    // DURUM 11 - İSPAT YÜKÜMLÜLÜĞÜ
+
     {
-      text: "Bir fizyoterapi merkezinde, yeni geliştirilen bir cihazın kas iyileşmesini mevcut yöntemlerden daha fazla hızlandırdığı iddia ediliyor. Merkezde çalışan bir fizyoterapist, cihazın üstünlüğünü gösteren kontrollü araştırmalar bulunmadığını belirterek iddianın dayanağını soruyor. Cihazı savunan meslektaşı ise şimdiye kadar cihazın etkisiz olduğunu ortaya koyan bir araştırmayla karşılaşmadığını söylüyor. Meslektaşının bu değerlendirmeye katılmaması durumunda farklı sonuçlar gösteren araştırmalar sunabileceğini, o zamana kadar cihazın kullanılmasının uygun olacağını belirtiyor.",
+      text: "Bir fizyoterapi merkezinde, yeni geliştirilen bir cihazın kas iyileşmesini mevcut yöntemlerden daha fazla hızlandırdığı iddia ediliyor. Merkezde çalışan bir fizyoterapist, cihazın üstünlüğünü gösteren kontrollü araştırmalar bulunmadığını belirterek iddianın dayanağını soruyor. Cihazı savunan meslektaşı ise daha iyi bir cihaz varsa onu kullanabileceğini söylüyor. Ancak şimdiye kadar kimsenin bu cihazın diğer yöntemlerden daha etkisiz olduğunu gösteren bir araştırma sunmadığını belirterek cihazı kullanmamak için yeterli bir sebep olmadığını ileri sürüyor.",
       answer: "ispat-yukumlulugu"
     },
 
+    // DURUM 12 - SAFSATA YOK
+
     {
-      text: "Bir üniversitenin fizyoterapi bölümünde, kronik diz ağrısı yaşayan hastalar için uzaktan takip uygulamalarının yaygınlaştırılması tartışılıyor. Bir öğretim üyesi, bu yöntemin geleneksel yüz yüze takipten daha etkili olduğuna ilişkin yeterli karşılaştırmalı veri bulunmadığını belirtiyor. Başka bir akademisyen ise yöntemi destekleyen kişinin uluslararası düzeyde tanınmış bir ortopedi cerrahı olduğunu, uzun yıllardır kas-iskelet sistemi hastalıklarıyla ilgilendiğini ve tıp dünyasında saygın bir konuma sahip olduğunu hatırlatıyor. Böyle bir hekimin mesleki deneyimlerine dayanan değerlendirmesinin, yöntemin etkinliği konusunda karar vermek için güçlü bir dayanak oluşturduğunu savunuyor.",
-      answer: "bir-bilen"
+      text: "Bir üniversitenin fizyoterapi bölümünde, kronik diz ağrısı yaşayan hastalar için uzaktan takip uygulamalarının yaygınlaştırılması tartışılıyor. Bir öğretim üyesi, bu yöntemin geleneksel yüz yüze takipten daha etkili olduğuna ilişkin yeterli karşılaştırmalı veri bulunmadığını belirtiyor. Başka bir akademisyen ise yöntemi destekleyen kişinin uluslararası düzeyde tanınmış bir ortopedi cerrahı olduğunu, uzun yıllardır kas-iskelet sistemi hastalıklarıyla ilgilendiğini ve tıp dünyasında saygın bir konuma sahip olduğunu hatırlatıyor. Böyle bir hekimin mesleki deneyimlerine dayanan değerlendirmesinin, yöntemin etkinliği konusunda karar vermek için önemli bir gösterge olduğunu savunuyor.",
+      answer: "safsata-yok"
     },
+
+    // DURUM 13 - DUYGULARA BAŞVURMA
 
     {
       text: "Bir hastanenin yönetim toplantısında, taburcu edilen hastalara sağlanan evde rehabilitasyon hizmetlerinin nasıl genişletileceği tartışılıyor. Yöneticiler, personel kapasitesi, hasta gereksinimleri ve maliyetlere ilişkin farklı seçenekleri değerlendiriyor. Toplantıya katılan bir temsilci, hareket kısıtlılığı nedeniyle evinden çıkamayan yaşlı bir hastanın yaşadığı yalnızlığı ve çaresizliği ayrıntılı biçimde anlatıyor. Bu hastanın yakınlarının yaşadığı üzüntüden de söz ederek katılımcılardan benzer durumda kendi ailelerinden birinin bulunduğunu düşünmelerini istiyor. Anlattığı örneğin hizmetlerin planlanmasında yol gösterici olması gerektiğini belirterek bütün hastalara aynı sıklıkta ev ziyareti yapılmasını savunuyor.",
